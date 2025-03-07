@@ -14,7 +14,6 @@ flask-jwt-extended = "*"
 flask-mail = "*"
 itsdangerous = "*"
 requests = "*"
-flask = "*"
 flask-cors = "*"
 bcrypt = "*"
 werkzeug = "*"
@@ -25,6 +24,7 @@ flask-marshmallow = "*"
 psycopg2-binary = "*"
 python-dotenv = "*"
 gunicorn = "*"
+flask = "*"
 
 [dev-packages]
 
