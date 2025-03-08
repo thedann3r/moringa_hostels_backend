@@ -20,12 +20,12 @@ flask-marshmallow = "*"
 psycopg2-binary = "*"
 python-dotenv = "*"
 gunicorn = "*"
-flask = "*"
 requests = "*"
 load-dotenv = "*"
 bcrypt = "*"
-flask-cors = "*"
 flask-migrate = "*"
+flask = "*"
+flask-cors = "*"
 
 [dev-packages]
 
