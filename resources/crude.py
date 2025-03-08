@@ -517,13 +517,29 @@ class Bookings(Resource):
         } for book in bookings], 200
 
 
-class RoomBookings(Resource):
-    def get(self, room_no):
-        bookings = Booking.query.filter_by(room_id=room_no).all()
-        if not bookings:
-            return {"message": "No bookings found for this room."}, 404
+# class RoomBookings(Resource):
+#     def get(self, room_no):
+#         bookings = Booking.query.filter_by(room_id=room_no).all()
+#         if not bookings:
+#             return {"message": "No bookings found for this room."}, 404
 
-        return [{
-            "start_date": booking.start_date.strftime("%Y-%m-%d %H:%M"),
-            "end_date": booking.end_date.strftime("%Y-%m-%d %H:%M")
-        } for booking in bookings]
+#         return [{
+#             "start_date": booking.start_date.strftime("%Y-%m-%d %H:%M"),
+#             "end_date": booking.end_date.strftime("%Y-%m-%d %H:%M")
+        # } for booking in bookings]
+    
+class RoomBookings(Resource):
+    @jwt_required()
+    def get(self, room_id):
+        # Fetch bookings for the specific room
+        bookings = Booking.query.filter_by(room_id=room_id).all()
+        if not bookings:
+            return {"booked_dates": []}, 200
+
+        # Extract booked start and end dates
+        booked_dates = [
+            {"start_date": booking.start_date.strftime("%Y-%m-%d"), "end_date": booking.end_date.strftime("%Y-%m-%d")}
+            for booking in bookings
+        ]
+
+        return {"booked_dates": booked_dates}, 200

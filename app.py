@@ -280,7 +280,9 @@ api.add_resource(BookingsList, '/bookings', '/bookings/<int:id>' )
 api.add_resource(Bookings, '/Userbookings')
 api.add_resource(CancelBooking, "/bookings/<int:id>/cancel")
 
-api.add_resource(RoomBookings, "/bookings/room/<int:room_no>")
+# api.add_resource(RoomBookings, "/bookings/room/<int:room_no>")
+
+api.add_resource(RoomBookings, "/rooms/<int:room_id>/booked-dates")
 
 if __name__ == '__main__':
     app.run(debug=True)
