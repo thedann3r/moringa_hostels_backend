@@ -447,7 +447,7 @@ class BookingsList(Resource):
         )
 
         db.session.add(booking)
-        room.availability = "booked!"
+        room.availability = False  
         db.session.commit()
         return booking.to_dict(),201
     
