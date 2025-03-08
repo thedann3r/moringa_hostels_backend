@@ -203,13 +203,17 @@ class Room(Resource):
         max = 30000
         if price < min or price > max:
             return {'error' : f'Room price must be between {min} and {max} price!'},400
+        availability = data['availability']  
+        if not isinstance(availability, bool):
+           return {'error': 'Availability must be a boolean value!'}, 422
+
 
         new_room = Rooms(
             room_no = room_no,
             price = price,
             room_type = data['room_type'],
             accommodation_id=data.get('accommodation_id'),
-            availability=data['availability'],
+            availability=availability,
             image=data['image'],
             description=data['description']
         )
@@ -265,7 +269,10 @@ class RoomList(Resource):
         if 'room_type' in data:
             accommodation.room_type = data ['room_type']
         if 'availability' in data:
-            accommodation.availability = data ['availability']
+            availability = data['availability']
+        if not isinstance(availability, bool):
+           return {'error': 'Availability must be a boolean value!'}, 422
+        accommodation.availability = availability
         if 'image' in data:
             accommodation.image = data ['image']
         if 'description' in data:

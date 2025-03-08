@@ -28,7 +28,9 @@ EMAIL_VALIDATION_API_KEY = os.getenv('EMAIL_VALIDATION_API_KEY')
 
 db.init_app(app)
 migrate = Migrate(app,db)
-CORS(app, resources={r"/": {"origins": ""}}, supports_credentials=True)
+
+CORS(app, supports_credentials=True)
+
 api = Api(app)
 bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
@@ -144,7 +146,8 @@ def is_valid_email(email):
     return re.match(r"[^@]+@[^@]+\.[^@]+", email)
 
 def is_strong_password(password):
-    return re.match(r"^(?=.[A-Za-z])(?=.\d)[A-Za-z\d@$!%*?&]{8,}$", password)
+    return bool(re.match(r"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$", password))
+
 
 class Signup(Resource):
     def post(self):

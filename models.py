@@ -69,7 +69,7 @@ class Rooms(db.Model, SerializerMixin):
     room_type = db.Column(db.String, nullable=False)
     accommodation_id = db.Column(db.Integer, db.ForeignKey('accommodations.id'), nullable=False)
     price = db.Column(db.Integer, nullable=False)
-    availability = db.Column(db.String, nullable=False)
+    availability = db.Column(db.Boolean, default=True)
     image = db.Column(db.String, nullable=False)
     description = db.Column(db.String, nullable=False)
 
