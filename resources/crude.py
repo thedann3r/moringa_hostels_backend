@@ -98,7 +98,7 @@ class Accommodation(Resource):
         accommodation = Accommodations.query.get(id)
         if not accommodation:
             return {"message": "Accommodation not found"}, 404
-        
+         
         return {
             "id": accommodation.id,
             "name": accommodation.name,
@@ -268,11 +268,13 @@ class RoomList(Resource):
             accommodation.accommodation_id = data ['accommodation_id']
         if 'room_type' in data:
             accommodation.room_type = data ['room_type']
+
         if 'availability' in data:
             availability = data['availability']
-        if not isinstance(availability, bool):
-           return {'error': 'Availability must be a boolean value!'}, 422
-        accommodation.availability = availability
+            if not isinstance(availability, bool):
+                return {'error': 'Availability must be a boolean value!'}, 422
+            accommodation.availability = availability  # Update only if the check passes
+
         if 'image' in data:
             accommodation.image = data ['image']
         if 'description' in data:

@@ -15,7 +15,6 @@ flask-mail = "*"
 itsdangerous = "*"
 werkzeug = "*"
 flask-bcrypt = "*"
-flask-migrate = "*"
 marshmallow-sqlalchemy = "*"
 flask-marshmallow = "*"
 psycopg2-binary = "*"
@@ -26,6 +25,7 @@ requests = "*"
 load-dotenv = "*"
 bcrypt = "*"
 flask-cors = "*"
+flask-migrate = "*"
 
 [dev-packages]
 
