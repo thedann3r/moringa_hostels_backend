@@ -39,7 +39,7 @@ consumer_key = os.getenv('CONSUMER_KEY')
 consumer_secret = os.getenv('CONSUMER_SECRET')
 shortcode = os.getenv('SHORTCODE')
 passkey = os.getenv('PASSKEY')
-callback_url = "https://0e87-197-248-19-111.ngrok-free.app/mpesa/callback"
+callback_url = "https://moringa-hostels-backend-ebzd.onrender.com/mpesa/callback"
 
 @app.route('/mpesa/pay', methods = ['POST'])
 def mpesa_pay():
