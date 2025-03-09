@@ -203,23 +203,29 @@ class Room(Resource):
         max = 30000
         if price < min or price > max:
             return {'error' : f'Room price must be between {min} and {max} price!'},400
+
         availability = data['availability']  
         if not isinstance(availability, bool):
-           return {'error': 'Availability must be a boolean value!'}, 422
+            return {'error': 'Availability must be a boolean value!'}, 422
 
+        # Ensure room number is unique per accommodation
+        existing_room = Rooms.query.filter_by(accommodation_id=data['accommodation_id'], room_no=room_no).first()
+        if existing_room:
+            return {'error': 'A room with this number already exists in the selected accommodation!'}, 400
 
         new_room = Rooms(
             room_no = room_no,
             price = price,
             room_type = data['room_type'],
-            accommodation_id=data.get('accommodation_id'),
-            availability=availability,
-            image=data['image'],
-            description=data['description']
+            accommodation_id = data['accommodation_id'],
+            availability = availability,
+            image = data['image'],
+            description = data['description']
         )
         db.session.add(new_room)
         db.session.commit()
         return new_room.to_dict(), 201
+
 
 class RoomList(Resource):
     @jwt_required()
@@ -240,47 +246,56 @@ class RoomList(Resource):
     def patch(self, id):
         current_user = get_jwt_identity()
         if current_user['role'] != 'admin':
-            return {'error' : 'The user is forbidden from editing the accommodations!'}, 403
+            return {'error': 'The user is forbidden from editing the rooms!'}, 403
         
         data = request.get_json()
-        accommodation = Rooms.query.get(id)
+        room = Rooms.query.get(id)
         
-        if not accommodation:
-            return {'message': 'Accommodation not found'}, 404
-        
+        if not room:
+            return {'message': 'Room not found'}, 404
+
         if 'room_no' in data:
-            room = data ['room_no']
+            new_room_no = data['room_no']
             min = 1
             max = 100
-            if room < min or room > max:
-                return {'error' : f'Hostel rooms must be between {min} and {max} respectively!'},400
-            accommodation.room_no = room
+            if new_room_no < min or new_room_no > max:
+                return {'error': f'Hostel rooms must be between {min} and {max} respectively!'}, 400
+            
+            # Check if the new room number is already taken within the same accommodation
+            existing_room = Rooms.query.filter_by(accommodation_id=room.accommodation_id, room_no=new_room_no).first()
+            if existing_room and existing_room.id != room.id:
+                return {'error': 'A room with this number already exists in the selected accommodation!'}, 400
+
+            room.room_no = new_room_no
 
         if 'price' in data:
-            price = data['price']
+            new_price = data['price']
             min = 5000
             max = 30000
-            if price < min or price > max:
-                return {'error' : f'Room price must be between {min} and {max} price!'},400
-            accommodation.price = price
+            if new_price < min or new_price > max:
+                return {'error': f'Room price must be between {min} and {max} price!'}, 400
+            room.price = new_price
 
         if 'accommodation_id' in data:
-            accommodation.accommodation_id = data ['accommodation_id']
+            room.accommodation_id = data['accommodation_id']
+            
         if 'room_type' in data:
-            accommodation.room_type = data ['room_type']
+            room.room_type = data['room_type']
 
         if 'availability' in data:
             availability = data['availability']
             if not isinstance(availability, bool):
                 return {'error': 'Availability must be a boolean value!'}, 422
-            accommodation.availability = availability  # Update only if the check passes
+            room.availability = availability  # Update only if the check passes
 
         if 'image' in data:
-            accommodation.image = data ['image']
+            room.image = data['image']
+
         if 'description' in data:
-            accommodation.description = data ['description']
+            room.description = data['description']
+
         db.session.commit()
-        return accommodation.to_dict(), 200
+        return room.to_dict(), 200
     
     @jwt_required()
     def delete(self, id):
@@ -469,7 +484,7 @@ class CancelBooking(Resource):
         booking.status = "canceled"
         
         if booking.room:
-            booking.room.availability = "available!"
+            booking.room.availability = True
 
         db.session.commit()
 
