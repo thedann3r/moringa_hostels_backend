@@ -222,13 +222,23 @@ class DeleteAcc(Resource):
     @jwt_required()
     def delete(self):
         current = get_jwt_identity()
-        current_user = current.get('id')
-        delete_user = User.query.get(current_user)
+        user_id = current.get('id')
+        role = current.get('role')
+
+        data = request.get_json()
+        target_user_id = data.get('user_id') if data else user_id
+
+        if role != "admin" and target_user_id != user_id:
+            return {'error': 'Unauthorized action!'}, 403
+
+        delete_user = User.query.get(target_user_id)
         if not delete_user:
-            return{'error' : 'the user does not exist!'}, 404
+            return {'error': 'The user does not exist!'}, 404
+
         db.session.delete(delete_user)
         db.session.commit()
-        return {'message' : 'the user was deleted successfully!'}, 200
+        return {'message': 'The user was deleted successfully!'}, 200
+
     
 class Refresh(Resource):
     @jwt_required(refresh = True)
