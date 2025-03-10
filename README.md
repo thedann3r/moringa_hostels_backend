@@ -55,7 +55,7 @@ If you want to run the project locally, you’ll need:
 
 If you have any questions, suggestions, or need assistance, please contact:
 
-- Emails: <nyawiralornah@gmail.com>, <>, <>, <>, <>
+- Emails: <nyawiralornah@gmail.com>, <sharon94odongo@gmail.com>, <fidelmwovi@gmail.com>, <bennkiche7@gmail.com>, <austindan168@gmail.com>
 
 ## License
 - This project is licensed under the MIT License.
